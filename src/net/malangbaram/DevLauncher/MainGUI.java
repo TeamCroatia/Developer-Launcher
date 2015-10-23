@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -17,51 +19,70 @@ import javax.swing.JOptionPane;
 
 import net.malangbaram.DevLauncher.Util.CompressionUtil;
 import net.malangbaram.DevLauncher.Util.RemoveUtil;
+import net.malangbaram.DevLauncher.Util.VersionManagementUtil;
 
 public class MainGUI {
 
-	public static void main(String[] args) {
+	static String myVersion;
+	static String lastVersion;
+
+	public static void main(String[] args) throws Exception {
+
+		myVersion = VersionManagementUtil.checkMyVersion();
+		lastVersion = VersionManagementUtil.checkLastVersion();
+
+		System.out.println(myVersion + "/" + lastVersion);
+
 		mainForm();
 	}
 
 	private static void mainForm() {
 		JFrame frame = new JFrame();
-		frame.setSize(100,100);
+		frame.setSize(150, 150);
 		frame.setTitle("Croatia Installer");
 
 		Container container = frame.getContentPane();
 		container.setBackground(Color.white);
 		container.setLayout(new FlowLayout());
 
-		
-		
-		JButton btn = new JButton("¸ğµåÆÑ ¼³Ä¡");
+		JLabel myVersion = new JLabel("í˜„ì¬ë²„ì „:");
+		container.add(myVersion);
+
+		JLabel myVersionView = new JLabel(MainGUI.myVersion);
+		container.add(myVersionView);
+
+		JLabel lastVersion = new JLabel("ìµœì‹ ë²„ì „:");
+		container.add(lastVersion);
+
+		JLabel lastVersionView = new JLabel(MainGUI.lastVersion);
+		container.add(lastVersionView);
+
+		JButton btn = new JButton("ëª¨ë“œíŒ© ë‹¤ìš´ë¡œë“œ");
 		container.add(btn);
 
-		final JLabel stat = new JLabel("ÁØºñÁß");
+		final JLabel stat = new JLabel("ì¤€ë¹„ì¤‘");
 		container.add(stat);
-		
+
 		btn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				stat.setText("´Ù¿î·Îµå Áß");
-				
-				JOptionPane.showConfirmDialog(null, "ÇØ´ç ¼³Ä¡±â ½ÇÇà½Ã ¸ğµÎ ÃÊ±âÈ­µÇ¸ç ÇöÀç ¹é¾÷±â´ÉÀº Áö¿øÇÏÁö ¾ÊÀ¸´Ï ¹é¾÷ ÈÄ ¼³Ä¡ÇÏ½Ã±æ ±ÇÀåÇÕ´Ï´Ù.", "TeamCroatia Installer",
+
+				stat.setText("ë‹¤ìš´ë¡œë“œ ì¤‘");
+
+				JOptionPane.showConfirmDialog(null, "í•´ë‹¹ ì„¤ì¹˜ê¸° ì‹¤í–‰ì‹œ ëª¨ë‘ ì´ˆê¸°í™”ë˜ë©° í˜„ì¬ ë°±ì—…ê¸°ëŠ¥ì€ ì§€ì›í•˜ì§€ ì•Šìœ¼ë‹ˆ ë°±ì—… í›„ ì„¤ì¹˜í•˜ì‹œê¸¸ ê¶Œì¥í•©ë‹ˆë‹¤.", "TeamCroatia Installer",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-				JOptionPane.showConfirmDialog(null, "¿Ï·áÃ¢ÀÌ ¶ã ¶§ ±îÁö ÇÁ·Î±×·¥À» Á¾·áÇÏÁö ¸»¾ÆÁÖ¼¼¿ä.", "TeamCroatia Installer",
+				JOptionPane.showConfirmDialog(null, "ì™„ë£Œì°½ì´ ëœ° ë•Œ ê¹Œì§€ í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•˜ì§€ ë§ì•„ì£¼ì„¸ìš”.", "TeamCroatia Installer",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-				
 				try {
-					
+
 					File remove = new File(System.getenv("APPDATA") + "\\.minecraft");
 					RemoveUtil.deleteDirectory(remove);
-					
-		            URL u = new URL("http://dl.malangbaram.net/modpack.zip");
-		            File filePath = new File(System.getenv("APPDATA") + "\\.minecraft");
+
+					URL u = new URL("http://dl.malangbaram.net/modpack.zip");
+					File filePath = new File(System.getenv("APPDATA") + "\\.minecraft");
 					File fileDir = filePath.getParentFile();
 					filePath.mkdirs();
 					FileOutputStream fos = new FileOutputStream(System.getenv("APPDATA") + "\\.minecraft\\modpack.zip");
@@ -84,11 +105,11 @@ public class MainGUI {
 						fos.write(buf, 0, (int) len);
 
 					}
-					
+
 					fos.close();
 					is.close();
 
-					stat.setText("¾ĞÃàÇØÁ¦ Áß");
+					stat.setText("ì••ì¶•í•´ì œ ì¤‘");
 					
 					File zip = new File(System.getenv("APPDATA") + "\\.minecraft\\modpack.zip");
 					
@@ -96,22 +117,29 @@ public class MainGUI {
 					cu.unzip(zip , new File(System.getenv("APPDATA") + "\\.minecraft") );
 
 
-					stat.setText("¿Ï·á");
-					JOptionPane.showConfirmDialog(null, "´Ù¿î·Îµå ¿Ï·á", "TeamCroatia Installer",
+					stat.setText("ì™„ë£Œ");
+					JOptionPane.showConfirmDialog(null, "ë‹¤ìš´ë¡œë“œ ì™„ë£Œ", "TeamCroatia Installer",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 					
 					zip.delete();
 				} catch (Exception ies) {
 
-					JOptionPane.showConfirmDialog(null, "´Ù¿î·Îµå ¿À·ù", "TeamCroatia Installer",
+					JOptionPane.showConfirmDialog(null, "ë‹¤ìš´ë¡œë“œ ì˜¤ë¥˜", "TeamCroatia Installer",
 							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-					stat.setText("½ÇÆĞ");
+					stat.setText("ì‹¤íŒ¨");
 					System.out.println(ies);
 				}
 
 			}
 		});
+
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+
 		frame.setVisible(true);
 	}
 }
