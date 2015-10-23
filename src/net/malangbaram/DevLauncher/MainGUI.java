@@ -2,14 +2,15 @@ package net.malangbaram.DevLauncher;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -37,13 +38,17 @@ public class MainGUI {
 
 	private static void mainForm() {
 		JFrame frame = new JFrame();
-		frame.setSize(150, 150);
+		frame.setSize(150, 167);
 		frame.setTitle("Croatia Installer");
 
 		Container container = frame.getContentPane();
 		container.setBackground(Color.white);
 		container.setLayout(new FlowLayout());
 
+		Dimension sizeFrame = frame.getSize();
+		Dimension sizeScreen = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation((sizeScreen.width - sizeFrame.width)/2, (sizeScreen.height - sizeFrame.height)/2);
+		
 		JLabel myVersion = new JLabel("현재버전:");
 		container.add(myVersion);
 
