@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -30,8 +31,6 @@ public class MainGUI {
 
 		myVersion = VersionManagementUtil.checkMyVersion();
 		lastVersion = VersionManagementUtil.checkLastVersion();
-
-		System.out.println(myVersion + "/" + lastVersion);
 
 		mainForm();
 	}
@@ -57,13 +56,15 @@ public class MainGUI {
 		JLabel lastVersionView = new JLabel(MainGUI.lastVersion);
 		container.add(lastVersionView);
 
-		JButton btn = new JButton("모드팩 다운로드");
-		container.add(btn);
+		JButton Dbtn = new JButton("모드팩 다운로드");
+		container.add(Dbtn);
+		JButton Lbtn = new JButton("런처 실행");
+		container.add(Lbtn);
 
 		final JLabel stat = new JLabel("준비중");
 		container.add(stat);
 
-		btn.addActionListener(new ActionListener() {
+		Dbtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -131,6 +132,27 @@ public class MainGUI {
 					System.out.println(ies);
 				}
 
+			}
+		});
+		
+		Lbtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if(MainGUI.myVersion.equals("미설치")) {
+					JOptionPane.showConfirmDialog(null, "현재 로컬에 모드팩이 설치되어 있지 않습니다. 설치 후 다시 시도 해주세요.", "TeamCroatia Installer",
+							JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					File file = new File(System.getenv("APPDATA") + "\\.minecraft\\launcher.jar");
+					
+					Process p;
+					try {
+						p = Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + 
+						file.getAbsolutePath());
+						p.waitFor();
+					} catch (Exception e1) {}
+				}
 			}
 		});
 
