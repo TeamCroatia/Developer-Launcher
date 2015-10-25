@@ -2,6 +2,7 @@ package net.malangbaram.DevLauncher.Util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,12 +10,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import net.malangbaram.DevLauncher.Lang;
+
 public class VersionManagementUtil {
 
 	public static String checkMyVersion() throws Exception {
 
+		File versionText = new File("C:\\" + Lang.TITLE);
+		
 		try {
-			FileReader mVersionFR = new FileReader("mVersion.txt");
+			FileReader mVersionFR = new FileReader(versionText+ "\\mVersion.txt");
 			BufferedReader mVersionBR = new BufferedReader(mVersionFR);
 			String buf;
 			buf = mVersionBR.readLine();
@@ -26,7 +31,8 @@ public class VersionManagementUtil {
 			}
 			
 		}catch(FileNotFoundException e) {
-			FileWriter mVersionFW = new FileWriter("mVersion.txt");
+			versionText.mkdirs();
+			FileWriter mVersionFW = new FileWriter(versionText+ "\\mVersion.txt");
 			mVersionFW.write("unknown");
 			BufferedWriter bw = new BufferedWriter(mVersionFW);
 			bw.close();
