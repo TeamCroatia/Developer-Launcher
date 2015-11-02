@@ -7,10 +7,10 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -18,6 +18,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+
+
 
 import net.malangbaram.DevLauncher.Util.CompressionUtil;
 import net.malangbaram.DevLauncher.Util.RemoveUtil;
@@ -106,7 +108,7 @@ public class MainGUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
 				stat.setText("다운로드 중");
 
 				JOptionPane.showConfirmDialog(null, "해당 설치기 실행시 모두 초기화되며 현재 백업기능은 지원하지 않으니 백업 후 설치하시길 권장합니다.",
@@ -148,10 +150,19 @@ public class MainGUI {
 					CompressionUtil cu = new CompressionUtil();
 					cu.unzip(zip, new File(System.getenv("APPDATA") + "\\.minecraft"));
 
+					FileWriter mVersionFW = new FileWriter("C:\\" + Lang.TITLE + "\\mVersion.txt");
+					mVersionFW.write(MainGUI.lastVersion);
+					BufferedWriter bw = new BufferedWriter(mVersionFW);
+					bw.close();
+					mVersionFW.close();
+					
+					myVersionView.setText(MainGUI.lastVersion);
+					
 					stat.setText("완료");
 					JOptionPane.showConfirmDialog(null, "다운로드 완료", Lang.TITLE, JOptionPane.DEFAULT_OPTION,
 							JOptionPane.INFORMATION_MESSAGE);
-
+				
+					
 					zip.delete();
 				} catch (Exception ies) {
 
@@ -183,8 +194,7 @@ public class MainGUI {
 					try {
 						p = Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
 						p.waitFor();
-					} catch (Exception e1) {
-					}
+					} catch (Exception e1) {}
 				}
 			}
 		});
