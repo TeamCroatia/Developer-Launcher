@@ -16,7 +16,7 @@ public class VersionManagementUtil {
 
 	public static String checkMyVersion() throws Exception {
 
-		File versionText = new File("C:\\" + Lang.TITLE);
+		File versionText = new File(System.getenv("APPDATA") + "\\.minecraft");
 		
 		try {
 			FileReader mVersionFR = new FileReader(versionText+ "\\mVersion.txt");

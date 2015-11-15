@@ -2,11 +2,7 @@ package net.malangbaram.DevLauncher;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -61,8 +57,8 @@ public class DevloperLauncher extends Application {
 		viewLaVer.setLayoutX(72);
 		viewLaVer.setLayoutY(25);
 
-		Button btnDownModpack = new Button("모드팩 다운로드");
-		Button btnLauch = new Button("런처실행");
+		final Button btnDownModpack = new Button("모드팩 다운로드");
+		final Button btnLauch = new Button("런처실행");
 		btnDownModpack.setLayoutX(5);
 		btnDownModpack.setLayoutY(45);
 		btnLauch.setLayoutX(5);
@@ -72,16 +68,22 @@ public class DevloperLauncher extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-
 				try {
-					Util.webDown(new File(System.getenv("APPDATA") + "\\.minecraft"), new URL("http://dl.malangbaram.net/modpack.zip"), "modpack.zip");
-
-					File zip = new File(System.getenv("APPDATA") + "\\.minecraft\\modpack.zip");
+					
+					
+					btnDownModpack.setDisable(true);
+					btnLauch.setDisable(true);
+					
+					File minecraftP = new File(System.getenv("APPDATA") + "\\.minecraft");
+					
+					Util.delDir(minecraftP);
+					Util.webDown(minecraftP, "http://dl.malangbaram.net/modpack.zip", "modpack.zip");
+					File zip = new File(minecraftP +"modpack.zip");
 
 					CompressionUtil cu = new CompressionUtil();
 					cu.unzip(zip, new File(System.getenv("APPDATA") + "\\.minecraft"));
 
-					FileWriter mVersionFW = new FileWriter("C:\\" + Lang.TITLE + "\\mVersion.txt");
+					FileWriter mVersionFW = new FileWriter(minecraftP + "\\mVersion.txt");
 					mVersionFW.write(lastVersion);
 					BufferedWriter bw = new BufferedWriter(mVersionFW);
 					bw.close();
@@ -91,7 +93,13 @@ public class DevloperLauncher extends Application {
 					zip.delete();
 
 					AlterUtil.showInformationAlter(Lang.TITLE, "다운로드 및 설치 완료");
+					btnDownModpack.setDisable(false);
+					btnLauch.setDisable(false);
 				} catch (Exception e) {
+//					e.printStackTrace();
+					AlterUtil.showErrorAlter(Lang.TITLE, "다운로드 및 설치 실패, 잠시후 다시 시도해주세요");
+					btnDownModpack.setDisable(false);
+					btnLauch.setDisable(false);
 				}
 			}
 		});
@@ -102,9 +110,9 @@ public class DevloperLauncher extends Application {
 			public void handle(ActionEvent arg0) {
 				File launcher = new File(System.getenv("APPDATA") + "\\.minecraft\\launcher.jar");
 
-				if (DevloperLauncher.myVersion.equals("미설치")) {
+				if (myVersion.equals("미설치")) {
 					AlterUtil.showErrorAlter(Lang.TITLE, "현재 로컬에 모드팩이 설치되어 있지 않습니다. 설치 후 다시 시도 해주세요.");
-				} else if (DevloperLauncher.myVersion.equals("확인실패")) {
+				} else if (myVersion.equals("확인실패")) {
 					AlterUtil.showErrorAlter(Lang.TITLE, "모드팩 버전확인이 불가능합니다. 서버접속이 불가능할 수도 있습니다");
 					Util.PGAction(launcher);
 				} else {
@@ -113,7 +121,7 @@ public class DevloperLauncher extends Application {
 			}
 		});
 
-		if (DevloperLauncher.updatePlease) {
+		if (updatePlease) {
 			AlterUtil.showInformationAlter(Lang.TITLE, "모드팩이 새로 업데이트되었습니다! 모드팩 다운로드 버튼을 눌러서 최신버전으로 설치해주세요");
 		}
 
