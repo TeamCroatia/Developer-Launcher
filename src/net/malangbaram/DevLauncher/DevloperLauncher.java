@@ -19,22 +19,33 @@ import net.malangbaram.DevLauncher.Util.VersionManagementUtil;
 
 public class DevloperLauncher extends Application {
 
+	static int version = 20151122;
+	
+	static File minecraftP = new File(System.getenv("APPDATA") + "\\.minecraft");
 	static String myVersion;
 	static String lastVersion;
 	static boolean updatePlease;
-
+	
 	public static void main(String[] args) throws Exception {
 
-		myVersion = VersionManagementUtil.checkMyVersion();
-		lastVersion = VersionManagementUtil.checkLastVersion();
+		int i;
+		if((version - (i = VersionManagementUtil.checkLauncherVersion("http://dl.malangbaram.net/launcherVersion.txt"))) != 0) {
+			AlterUtil.showInformationAlter(Lang.TITLE, "새로운 런처버전이 존재합니다!");
+			
+		}else {
 
-		if (lastVersion.equals(myVersion)) {
-			updatePlease = false;
-		} else {
-			updatePlease = true;
+			myVersion = VersionManagementUtil.checkMyVersion(minecraftP, "mVersion.txt");
+			lastVersion = VersionManagementUtil.checkLastVersion("http://dl.malangbaram.net/modVersion.txt");
+
+			if (lastVersion.equals(myVersion)) {
+				updatePlease = false;
+			} else {
+				updatePlease = true;
+			}
+
+			Application.launch(args);
+	
 		}
-
-		Application.launch(args);
 	}
 
 	@Override
@@ -74,14 +85,12 @@ public class DevloperLauncher extends Application {
 					btnDownModpack.setDisable(true);
 					btnLauch.setDisable(true);
 					
-					File minecraftP = new File(System.getenv("APPDATA") + "\\.minecraft");
-					
 					Util.delDir(minecraftP);
 					Util.webDown(minecraftP, "http://dl.malangbaram.net/modpack.zip", "modpack.zip");
 					File zip = new File(minecraftP +"modpack.zip");
 
 					CompressionUtil cu = new CompressionUtil();
-					cu.unzip(zip, new File(System.getenv("APPDATA") + "\\.minecraft"));
+					cu.unzip(zip, minecraftP);
 
 					FileWriter mVersionFW = new FileWriter(minecraftP + "\\mVersion.txt");
 					mVersionFW.write(lastVersion);
