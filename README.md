@@ -1,7 +1,7 @@
 TeamCroatia Developer Launcher
 ===========
 
-모드팩 버전: 20151102
+모드팩 버전: 20151122
 [다운로드](https://github.com/CroatiaTeam/Developer-Launcher/releases/)
 
 ### Changelog
