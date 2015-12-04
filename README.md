@@ -1,7 +1,7 @@
 TeamCroatia Developer Launcher
 ===========
 
-모드팩 버전: 20151122
+모드팩 버전: 20151204
 [다운로드](https://github.com/CroatiaTeam/Developer-Launcher/releases/)
 
 ### Changelog
@@ -11,7 +11,6 @@ TeamCroatia Developer Launcher
 ### TO-DO List
 
 ### 알려진 이슈
- - 포지 버그(전버전으로 사용하세요)
 
 ### 사용법
 실행한 후 모드팩 설치 버튼을 누릅니다. 아래의 글씨가 완료가 되면 모든 파일이 설치된 것입니다. 그 후, 아래의 런처 실행 버튼을 눌러서 마인크래프트 런처를 실행해 주신 후 새로 로그인 하셔서 TeamCroatia 프로파일로 들어오시면 됩니다.

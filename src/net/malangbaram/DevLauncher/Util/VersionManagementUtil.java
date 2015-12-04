@@ -14,10 +14,12 @@ import net.malangbaram.DevLauncher.Lang;
 
 public class VersionManagementUtil {
 
-	public static String checkMyVersion(File path, String versionFile) throws Exception {
+	public static String checkMyVersion(String file, String version) throws Exception {
+
+		File versionText = new File(file);
 
 		try {
-			FileReader mVersionFR = new FileReader(path + ".//" + versionFile);
+			FileReader mVersionFR = new FileReader(versionText + version);
 			BufferedReader mVersionBR = new BufferedReader(mVersionFR);
 			String buf;
 			buf = mVersionBR.readLine();
@@ -29,8 +31,8 @@ public class VersionManagementUtil {
 			}
 
 		} catch (FileNotFoundException e) {
-			path.mkdirs();
-			FileWriter mVersionFW = new FileWriter(path + versionFile);
+			versionText.mkdirs();
+			FileWriter mVersionFW = new FileWriter(versionText + version);
 			mVersionFW.write("unknown");
 			BufferedWriter bw = new BufferedWriter(mVersionFW);
 			bw.close();
@@ -40,35 +42,15 @@ public class VersionManagementUtil {
 
 	}
 
-	public static String checkLastVersion(URL url) {
-
-		try {
-			HttpURLConnection connect;
-			BufferedReader rd;
-			String result;
-
-			connect = (HttpURLConnection) url.openConnection();
-			connect.setRequestMethod("GET");
-			rd = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-			result = rd.readLine();
-			rd.close();
-
-			return result;
-
-		} catch (Exception e) {
-		}
-		return "확인 실패";
-	}
-
 	public static String checkLastVersion(String url) {
 
 		try {
-			URL url2 = new URL(url);
+			URL lUrl = new URL(url);
 			HttpURLConnection connect;
 			BufferedReader rd;
 			String result;
 
-			connect = (HttpURLConnection) url2.openConnection();
+			connect = (HttpURLConnection) lUrl.openConnection();
 			connect.setRequestMethod("GET");
 			rd = new BufferedReader(new InputStreamReader(connect.getInputStream()));
 			result = rd.readLine();
@@ -78,25 +60,30 @@ public class VersionManagementUtil {
 
 		} catch (Exception e) {
 		}
-		return "확인 실패";
+		return "unknown";
 	}
 
-	public static int checkLauncherVersion(String url) {
+	public static boolean booleanLauncherVersion(String url,int version) {
+
 		try {
-			URL url2 = new URL(url);
+			URL lUrl = new URL(url);
 			HttpURLConnection connect;
 			BufferedReader rd;
-			int result;
+			String result;
 
-			connect = (HttpURLConnection) url2.openConnection();
+			connect = (HttpURLConnection) lUrl.openConnection();
 			connect.setRequestMethod("GET");
 			rd = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-			result = Integer.parseInt(rd.readLine());
+			result = rd.readLine();
 			rd.close();
 
-			return result;
-
+			if (Integer.parseInt(result) > version) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (Exception e) {}
-		return -1;
+		return false;
 	}
+
 }

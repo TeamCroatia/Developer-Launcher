@@ -1,4 +1,4 @@
-package net.malangbaram.DevLauncher.Util;
+package net.malangbaram.DevLauncher.Util.javafx;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

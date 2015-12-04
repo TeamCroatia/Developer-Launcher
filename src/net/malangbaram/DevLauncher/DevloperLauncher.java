@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -12,44 +13,30 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import net.malangbaram.DevLauncher.Util.AlterUtil;
 import net.malangbaram.DevLauncher.Util.CompressionUtil;
 import net.malangbaram.DevLauncher.Util.Util;
 import net.malangbaram.DevLauncher.Util.VersionManagementUtil;
+import net.malangbaram.DevLauncher.Util.javafx.AlterUtil;
 
 public class DevloperLauncher extends Application {
 
-	static int version = 20151122;
+	public static String myVersion;
+	public static String lastVersion;
 	
-	static File minecraftP = new File(System.getenv("APPDATA") + "\\.minecraft");
-	static String myVersion;
-	static String lastVersion;
-	static boolean updatePlease;
-	
+	public static boolean plzUpModpack;
+	public static boolean plzUpLauncher = VersionManagementUtil.booleanLauncherVersion("https://raw.githubusercontent.com/TeamCroatia/Developer-Launcher/master/version/launcher.txt", Lang.VERSION);
+
 	public static void main(String[] args) throws Exception {
-
-		int i;
-		if((version - (i = VersionManagementUtil.checkLauncherVersion("http://dl.malangbaram.net/launcherVersion.txt"))) != 0) {
-			AlterUtil.showInformationAlter(Lang.TITLE, "새로운 런처버전이 존재합니다!");
-			
-		}else {
-
-			myVersion = VersionManagementUtil.checkMyVersion(minecraftP, "mVersion.txt");
-			lastVersion = VersionManagementUtil.checkLastVersion("http://dl.malangbaram.net/modVersion.txt");
-
-			if (lastVersion.equals(myVersion)) {
-				updatePlease = false;
-			} else {
-				updatePlease = true;
-			}
-
-			Application.launch(args);
-	
-		}
+		
+		myVersion = VersionManagementUtil.checkMyVersion(System.getenv("APPDATA") + "\\.minecraft", "\\mVersion.txt");
+		lastVersion = VersionManagementUtil.checkLastVersion("https://raw.githubusercontent.com/TeamCroatia/Developer-Launcher/master/version/mod.txt");
+		
+		Application.launch(args);
 	}
 
 	@Override
 	public void start(Stage frame) throws Exception {
+
 		frame.setTitle(Lang.TITLE);
 		Group gp = new Group();
 		Scene sc = new Scene(gp, 149, 120);
@@ -79,25 +66,26 @@ public class DevloperLauncher extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
+				AlterUtil.showInformationAlter(Lang.TITLE, "모드 설치를 시작합니다. 완료 창이 뜰 때까지 기다려 주세요.");
 				try {
-					
-					
 					btnDownModpack.setDisable(true);
 					btnLauch.setDisable(true);
-					
+
+					File minecraftP = new File(System.getenv("APPDATA") + "\\.minecraft");
+
 					Util.delDir(minecraftP);
 					Util.webDown(minecraftP, "http://dl.malangbaram.net/modpack.zip", "modpack.zip");
-					File zip = new File(minecraftP +"modpack.zip");
+					File zip = new File(minecraftP + "modpack.zip");
 
 					CompressionUtil cu = new CompressionUtil();
-					cu.unzip(zip, minecraftP);
+					cu.unzip(zip, new File(System.getenv("APPDATA") + "\\.minecraft"));
 
 					FileWriter mVersionFW = new FileWriter(minecraftP + "\\mVersion.txt");
 					mVersionFW.write(lastVersion);
 					BufferedWriter bw = new BufferedWriter(mVersionFW);
 					bw.close();
 					mVersionFW.close();
-					viewLoVer.setText(lastVersion);
+					myVersion = lastVersion;
 
 					zip.delete();
 
@@ -105,7 +93,6 @@ public class DevloperLauncher extends Application {
 					btnDownModpack.setDisable(false);
 					btnLauch.setDisable(false);
 				} catch (Exception e) {
-//					e.printStackTrace();
 					AlterUtil.showErrorAlter(Lang.TITLE, "다운로드 및 설치 실패, 잠시후 다시 시도해주세요");
 					btnDownModpack.setDisable(false);
 					btnLauch.setDisable(false);
@@ -130,7 +117,22 @@ public class DevloperLauncher extends Application {
 			}
 		});
 
-		if (updatePlease) {
+		if (plzUpLauncher) {
+			AlterUtil.showErrorAlter(Lang.TITLE, "런처 버전이 낮습니다 최신버전으로 업데이트 해주세요");
+			Platform.exit();
+		} else {
+			if (lastVersion.equals(myVersion)) {
+				plzUpModpack = false;
+			} else {
+				plzUpModpack = true;
+			}
+		}
+
+		if(lastVersion.equals("unknown")) {
+			btnDownModpack.setDisable(true);
+		}
+		
+		if (plzUpModpack) {
 			AlterUtil.showInformationAlter(Lang.TITLE, "모드팩이 새로 업데이트되었습니다! 모드팩 다운로드 버튼을 눌러서 최신버전으로 설치해주세요");
 		}
 
