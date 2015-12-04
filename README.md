@@ -2,11 +2,11 @@ TeamCroatia Developer Launcher
 ===========
 
 모드팩 버전: 20151204
-[다운로드](https://github.com/CroatiaTeam/Developer-Launcher/releases/)
+[다운로드](https://github.com/TeamCroatia/Developer-Launcher/releases/)
 
 ### Changelog
- - [모드팩](https://github.com/CroatiaTeam/Developer-Launcher/blob/master/CHANGELOG.md#Modpack)
- - [런처](https://github.com/CroatiaTeam/Developer-Launcher/blob/master/CHANGELOG.md#Launcher)
+ - [모드팩](https://github.com/TeamCroatia/Developer-Launcher/blob/master/CHANGELOG.md#Modpack)
+ - [런처](https://github.com/TeamCroatia/Developer-Launcher/blob/master/CHANGELOG.md#Launcher)
 
 ### TO-DO List
 
