@@ -86,6 +86,7 @@ public class DevloperLauncher extends Application {
 					bw.close();
 					mVersionFW.close();
 					myVersion = lastVersion;
+					viewLoVer.setText(myVersion);
 
 					zip.delete();
 
